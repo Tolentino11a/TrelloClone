@@ -1,0 +1,105 @@
+<div class="flex flex-col h-screen">
+  <app-navbar></app-navbar>
+  <div class="w-full grow bg-sky-600 px-4 pb-4">
+    <div class="flex flex-col h-full">
+      <div>
+        <h2 class="text-xl font-bold text-white my-4">Demo Board</h2>
+      </div>
+      <div class="flex grow overflow-x-scroll h-full"
+        cdkDropListcdkDropListOrientation="horizontal" cdkDropList (cdkDropListDropped)="dropHorizontal($event)">
+        <div class="flex grow items-start w-full h-full overflow-x-scroll"cdkDropListGroup>
+          <div class="rounded bg-gray-200 w-72 p-2 mr-3 shrink-0" *ngFor="let column of columns"
+            cdkDrag>
+            <div class="flex justify-between py-1 pr-2">
+              <h3 class="text-sm font-bold ml-2">{{ column.title }}</h3>
+                <button type="button"
+                (click)="column.isOpenList = !column.isOpenList"
+                cdkOverlayOrigin
+                #overlayList="cdkOverlayOrigin">
+                  <fa-icon [icon]="faEllipsis"></fa-icon>
+                </button>
+                <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="overlayList" [cdkConnectedOverlayOpen]="column.isOpenList">
+                  <div class="divide-y bg-white w-72 p-2 space-y-2">
+                    <div class="flex justify-center relative">
+                      <p>List Actions</p>
+                      <button class="absolute right-0 mr-2" (click)="column.isOpenList = !column.isOpenList">
+                        <fa-icon class="w-full" [icon]="faXmark"></fa-icon>
+                      </button>
+                    </div>
+                    <div class="text-slate-700">
+                      <p class="p-2">Add card...</p>
+                      <p class="p-2">Copy list...</p>
+                      <p class="p-2">Move list...</p>
+                      <p class="p-2">Watch</p>
+                    </div>
+                    <div class="text-slate-700">
+                      <p class="p-2">Sort by...</p>
+                    </div>
+                  </div>
+                </ng-template>
+            </div>
+            <div class="text-sm mt-2 min-h-[2.5rem]" cdkDropList (cdkDropListDropped)="onDrop($event)" [cdkDropListData]="column.todos">
+              <div
+                (click)="openDialog(todo)"
+                *ngFor="let todo of column.todos"
+                cdkDrag
+                class="bg-white shadow p-2 rounded mt-2 border-b border-x-gray-300 cursor-pointer hover:bg-gray-400">
+                {{ todo.title }}
+              </div>
+            </div>
+            <cdk-accordion>
+              <cdk-accordion-item #accordionAdd="cdkAccordionItem">
+                <button class="w-full pt-3 pb-2 px-2 font-semibold text-slate-500 text-sm flex justify-between"
+                  type="button"
+                  [style.display]="accordionAdd.expanded ? 'none' : ''"
+                  (click)="accordionAdd.toggle()">
+                  + Add a card
+                  <fa-icon [icon]="faImages"></fa-icon>
+                </button>
+                <div [style.display]="accordionAdd.expanded ? '' : 'none'">
+                  <input class="w-full min-h-[5.0rem] p-2 mt-2 bg-white rounded border-b border-x-gray-300"
+                  placeholder="Enter a title for this card ..."
+                  [(ngModel)]="isNameTodo"/>
+                  <div class="flex items-center justify-between mt-2">
+                    <div class="flex space-x-4">
+                      <app-btn [color]="'sky'" (click)="addTodo(column.title)" (click)="accordionAdd.toggle()">Add card</app-btn>
+                      <button (click)="accordionAdd.toggle()">
+                        <fa-icon class="w-full" [icon]="faXmark"></fa-icon>
+                      </button>
+                    </div>
+                    <fa-icon class="mr-2" [icon]="faEllipsis"></fa-icon>
+                  </div>
+                </div>
+              </cdk-accordion-item>
+            </cdk-accordion>
+          </div>
+          <cdk-accordion>
+            <cdk-accordion-item #accordionAddColumn="cdkAccordionItem">
+              <button class="rounded bg-gray-200 w-72 p-2 mr-3 shrink-0 text-sm font-bold text-left"
+                type="button"
+                (click)="accordionAddColumn.toggle()"
+                [style.display]="accordionAddColumn.expanded ? 'none' : ''">
+                + Add Column
+              </button>
+              <div class="rounded bg-gray-200 w-72 p-2 mr-3 shrink-0"
+                [style.display]="accordionAddColumn.expanded ? '' : 'none'">
+                <input class="w-full min-h-[5.0rem] p-2 mt-2 bg-white rounded border-b border-x-gray-300"
+                placeholder="Enter a title for this column ..."
+                [(ngModel)]="isNameColumn"/>
+                <div class="flex items-center justify-between mt-2">
+                  <div class="flex space-x-4">
+                    <app-btn [color]="'sky'" (click)="addColumn()" (click)="accordionAddColumn.toggle()">Add column</app-btn>
+                    <button (click)="accordionAddColumn.toggle()">
+                      <fa-icon class="w-full" [icon]="faXmark"></fa-icon>
+                    </button>
+                  </div>
+                  <fa-icon class="mr-2" [icon]="faEllipsis"></fa-icon>
+                </div>
+              </div>
+            </cdk-accordion-item>
+          </cdk-accordion>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
